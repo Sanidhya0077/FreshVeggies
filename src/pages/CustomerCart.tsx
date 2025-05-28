@@ -59,9 +59,20 @@ const CustomerCart = () => {
   };
 
   const continueShopping = () => {
-    // Ensure cart is saved before navigating
     localStorage.setItem("cart", JSON.stringify(cart));
     navigate("/customer-products");
+  };
+
+  const formatQuantity = (item: CartItem) => {
+    if (item.unit === "kg") {
+      return `${item.quantity} kg`;
+    } else if (item.unit === "dozen") {
+      return `${item.quantity} dozen`;
+    } else if (item.unit === "piece") {
+      return `${item.quantity} pcs`;
+    } else {
+      return `${item.quantity} ${item.unit}`;
+    }
   };
 
   if (cart.length === 0) {
@@ -124,7 +135,7 @@ const CustomerCart = () => {
                       <h3 className="font-semibold text-lg">{item.name}</h3>
                       <p className="text-sm text-gray-500">{item.category}</p>
                       <p className="text-lg font-bold text-green-600 mt-2">
-                        ${item.price.toFixed(2)} per {item.unit}
+                        ₹{item.price.toFixed(2)} per {item.unit}
                       </p>
                     </div>
 
@@ -140,18 +151,23 @@ const CustomerCart = () => {
                         >
                           -
                         </Button>
-                        <Input
-                          type="number"
-                          value={item.quantity}
-                          onChange={(e) =>
-                            updateQuantity(
-                              item.id,
-                              parseInt(e.target.value) || 0
-                            )
-                          }
-                          className="w-16 text-center h-8"
-                          min="0"
-                        />
+                        <div className="w-24 text-center">
+                          <Input
+                            type="number"
+                            value={item.quantity}
+                            onChange={(e) =>
+                              updateQuantity(
+                                item.id,
+                                parseInt(e.target.value) || 0
+                              )
+                            }
+                            className="w-full text-center h-8"
+                            min="0"
+                          />
+                          <span className="text-xs text-gray-500 mt-1 block">
+                            {formatQuantity(item)}
+                          </span>
+                        </div>
                         <Button
                           variant="outline"
                           size="sm"
@@ -166,7 +182,7 @@ const CustomerCart = () => {
 
                       <div className="flex flex-col items-end gap-2">
                         <p className="font-semibold text-lg">
-                          ${(item.price * item.quantity).toFixed(2)}
+                          ₹{(item.price * item.quantity).toFixed(2)}
                         </p>
                         <Button
                           variant="ghost"
@@ -193,16 +209,16 @@ const CustomerCart = () => {
               <CardContent className="space-y-4">
                 <div className="flex justify-between">
                   <span>Subtotal:</span>
-                  <span>${getCartTotal().toFixed(2)}</span>
+                  <span>₹{getCartTotal().toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Delivery Fee:</span>
-                  <span>$3.99</span>
+                  <span>₹3.99</span>
                 </div>
                 <div className="border-t pt-4">
                   <div className="flex justify-between font-bold text-lg">
                     <span>Total:</span>
-                    <span>${(getCartTotal() + 3.99).toFixed(2)}</span>
+                    <span>₹{(getCartTotal() + 3.99).toFixed(2)}</span>
                   </div>
                 </div>
 

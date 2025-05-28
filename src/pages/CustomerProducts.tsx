@@ -24,39 +24,39 @@ const CustomerProducts = () => {
     {
       id: "1",
       name: "Fresh Tomatoes",
-      price: 2.99,
-      unit: "lb",
+      price: 49.99,
+      unit: "kg",
       stock: 25,
       category: "Vegetables",
     },
     {
       id: "2",
       name: "Organic Carrots",
-      price: 1.89,
-      unit: "lb",
+      price: 39.99,
+      unit: "kg",
       stock: 18,
       category: "Vegetables",
     },
     {
       id: "3",
       name: "Green Lettuce",
-      price: 1.49,
-      unit: "head",
+      price: 29.99,
+      unit: "piece",
       stock: 12,
       category: "Vegetables",
     },
     {
       id: "4",
       name: "Red Bell Peppers",
-      price: 3.49,
-      unit: "lb",
+      price: 69.99,
+      unit: "kg",
       stock: 8,
       category: "Vegetables",
     },
     {
       id: "5",
       name: "Fresh Spinach",
-      price: 2.29,
+      price: 45.99,
       unit: "bunch",
       stock: 15,
       category: "Leafy Greens",
@@ -64,8 +64,8 @@ const CustomerProducts = () => {
     {
       id: "6",
       name: "Broccoli Crowns",
-      price: 2.79,
-      unit: "lb",
+      price: 55.99,
+      unit: "piece",
       stock: 10,
       category: "Vegetables",
     },
@@ -116,6 +116,18 @@ const CustomerProducts = () => {
     return { label: "In Stock", color: "bg-green-100 text-green-700" };
   };
 
+  const formatQuantity = (item: CartItem) => {
+    if (item.unit === "kg") {
+      return `${item.quantity} kg`;
+    } else if (item.unit === "dozen") {
+      return `${item.quantity} dozen`;
+    } else if (item.unit === "piece") {
+      return `${item.quantity} pcs`;
+    } else {
+      return `${item.quantity} ${item.unit}`;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 p-4">
       <div className="max-w-6xl mx-auto">
@@ -152,7 +164,7 @@ const CustomerProducts = () => {
                   {getCartItemCount()} items in cart
                 </span>
                 <span className="text-lg font-bold text-green-700">
-                  Total: ${getCartTotal().toFixed(2)}
+                  Total: ₹{getCartTotal().toFixed(2)}
                 </span>
               </div>
             </CardContent>
@@ -185,7 +197,7 @@ const CustomerProducts = () => {
                 <CardContent className="space-y-4">
                   <div className="flex justify-between items-center">
                     <span className="text-xl font-bold text-green-600">
-                      ${product.price.toFixed(2)}
+                      ₹{product.price.toFixed(2)}
                     </span>
                     <span className="text-sm text-gray-500">
                       per {product.unit}
@@ -209,7 +221,7 @@ const CustomerProducts = () => {
                       <div className="flex justify-between items-center text-sm">
                         <span className="text-green-600">In cart:</span>
                         <span className="font-medium text-green-600">
-                          {cartItem.quantity}
+                          {formatQuantity(cartItem)}
                         </span>
                       </div>
                     )}
