@@ -38,7 +38,7 @@ const ProductsList = ({ products, onEditProduct }: ProductsListProps) => {
       {products.length === 0 ? (
         <Card className="border-dashed border-2 border-gray-300">
           <CardContent className="flex items-center justify-center p-6 sm:p-8">
-            <p className="text-gray-500 text-sm sm:text-base">No products added yet. Add your first product!</p>
+            <p className="text-gray-500 text-sm sm:text-base text-center">No products added yet. Add your first product!</p>
           </CardContent>
         </Card>
       ) : (
@@ -48,18 +48,18 @@ const ProductsList = ({ products, onEditProduct }: ProductsListProps) => {
             return (
               <Card key={product.id} className="hover:shadow-md transition-shadow">
                 <CardHeader className="pb-3">
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <CardTitle className="text-base font-semibold text-gray-800">
+                  <div className="flex justify-between items-start gap-2">
+                    <div className="flex-1 min-w-0">
+                      <CardTitle className="text-base font-semibold text-gray-800 truncate">
                         {product.name}
                       </CardTitle>
-                      <p className="text-sm text-gray-500 mt-1">{product.category}</p>
+                      <p className="text-sm text-gray-500 mt-1 truncate">{product.category}</p>
                     </div>
                     <Button
                       variant="ghost"
                       size="icon"
                       onClick={() => onEditProduct(product)}
-                      className="h-8 w-8 text-gray-500 hover:text-green-600"
+                      className="h-8 w-8 text-gray-500 hover:text-green-600 flex-shrink-0"
                     >
                       <Edit className="h-4 w-4" />
                     </Button>
@@ -74,11 +74,11 @@ const ProductsList = ({ products, onEditProduct }: ProductsListProps) => {
                     <span className="text-sm text-gray-500">per {product.unit}</span>
                   </div>
                   
-                  <div className="flex justify-between items-center">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
                     <span className="text-sm text-gray-600">Stock:</span>
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-medium">{product.stock} {product.unit}</span>
-                      <Badge className={`text-xs ${stockStatus.color}`}>
+                      <Badge className={`text-xs whitespace-nowrap ${stockStatus.color}`}>
                         {stockStatus.label}
                       </Badge>
                     </div>

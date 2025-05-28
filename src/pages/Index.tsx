@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Bell, Package, TrendingUp, Users, Eye, CheckCircle, Clock, AlertCircle, Plus } from "lucide-react";
+import { Bell, Package, TrendingUp, Users, Eye, CheckCircle, Clock, AlertCircle, Plus, Menu } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -203,69 +203,83 @@ const Index = () => {
   const totalRevenue = orders.filter(order => order.status === 'completed').reduce((sum, order) => sum + order.total, 0);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 px-4 sm:px-6">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 px-2 sm:px-4 lg:px-6">
       <div className="container mx-auto py-4 sm:py-6 max-w-7xl">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 gap-4">
-          <div className="w-full sm:w-auto">
-            <h1 className="text-2xl sm:text-3xl font-bold text-green-800 mb-2">Fresh Veggie Dashboard</h1>
-            <p className="text-green-600 text-sm sm:text-base">Manage your vegetable orders and inventory efficiently</p>
-          </div>
-          
-          <div className="relative w-full sm:w-auto flex justify-end gap-2">
-            <Button
-              onClick={() => setShowProductModal(true)}
-              className="bg-green-600 hover:bg-green-700 text-white"
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Add Product
-            </Button>
+        <div className="flex flex-col gap-4 mb-6 sm:mb-8">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div className="w-full sm:w-auto">
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-green-800 mb-2">Fresh Veggie Dashboard</h1>
+              <p className="text-green-600 text-sm sm:text-base">Manage your orders efficiently</p>
+            </div>
             
-            <Button
-              variant="outline"
-              size="icon"
-              className="relative border-green-200 hover:border-green-400 hover:bg-green-50"
-              onClick={() => setShowNotifications(!showNotifications)}
-            >
-              <Bell className="h-5 w-5 text-green-600" />
-              {notifications.length > 0 && (
-                <Badge className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full text-xs px-1.5 py-0.5">
-                  {notifications.length}
-                </Badge>
+            <div className="relative w-full sm:w-auto flex justify-between sm:justify-end gap-2">
+              <Button
+                onClick={() => setShowProductModal(true)}
+                className="bg-green-600 hover:bg-green-700 text-white flex-1 sm:flex-none h-10"
+                size="sm"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                <span className="hidden sm:inline">Add Product</span>
+                <span className="sm:hidden">Add</span>
+              </Button>
+              
+              <Button
+                variant="outline"
+                size="icon"
+                className="relative border-green-200 hover:border-green-400 hover:bg-green-50 h-10 w-10"
+                onClick={() => setShowNotifications(!showNotifications)}
+              >
+                <Bell className="h-4 w-4 text-green-600" />
+                {notifications.length > 0 && (
+                  <Badge className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full text-xs px-1.5 py-0.5 min-w-[20px] h-5">
+                    {notifications.length}
+                  </Badge>
+                )}
+              </Button>
+              
+              {showNotifications && (
+                <NotificationPanel 
+                  notifications={notifications} 
+                  onClose={() => setShowNotifications(false)}
+                />
               )}
-            </Button>
-            
-            {showNotifications && (
-              <NotificationPanel 
-                notifications={notifications} 
-                onClose={() => setShowNotifications(false)}
-              />
-            )}
+            </div>
           </div>
-        </div>
 
-        {/* Navigation Tabs */}
-        <div className="flex gap-4 mb-6">
-          <Button
-            variant={activeTab === "orders" ? "default" : "outline"}
-            onClick={() => setActiveTab("orders")}
-            className={activeTab === "orders" ? "bg-green-600 text-white" : "border-green-200 text-green-700 hover:bg-green-50"}
-          >
-            Orders
-          </Button>
-          <Button
-            variant={activeTab === "products" ? "default" : "outline"}
-            onClick={() => setActiveTab("products")}
-            className={activeTab === "products" ? "bg-green-600 text-white" : "border-green-200 text-green-700 hover:bg-green-50"}
-          >
-            Products
-          </Button>
+          {/* Navigation Tabs */}
+          <div className="flex gap-2 w-full overflow-x-auto">
+            <Button
+              variant={activeTab === "orders" ? "default" : "outline"}
+              onClick={() => setActiveTab("orders")}
+              className={`flex-1 sm:flex-none whitespace-nowrap h-10 ${
+                activeTab === "orders" 
+                  ? "bg-green-600 text-white" 
+                  : "border-green-200 text-green-700 hover:bg-green-50"
+              }`}
+              size="sm"
+            >
+              Orders
+            </Button>
+            <Button
+              variant={activeTab === "products" ? "default" : "outline"}
+              onClick={() => setActiveTab("products")}
+              className={`flex-1 sm:flex-none whitespace-nowrap h-10 ${
+                activeTab === "products" 
+                  ? "bg-green-600 text-white" 
+                  : "border-green-200 text-green-700 hover:bg-green-50"
+              }`}
+              size="sm"
+            >
+              Products
+            </Button>
+          </div>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
           <StatsCard
-            title="Pending Orders"
+            title="Pending"
             value={pendingOrders.length}
             icon={Clock}
             color="orange"
@@ -277,13 +291,13 @@ const Index = () => {
             color="blue"
           />
           <StatsCard
-            title="Completed Today"
+            title="Completed"
             value={completedOrders.length}
             icon={CheckCircle}
             color="green"
           />
           <StatsCard
-            title="Revenue Today"
+            title="Revenue"
             value={`$${totalRevenue.toFixed(2)}`}
             icon={TrendingUp}
             color="emerald"
@@ -292,115 +306,230 @@ const Index = () => {
 
         {/* Content based on active tab */}
         {activeTab === "orders" ? (
-          // Orders Section
-          <div className="grid grid-cols-1 xl:grid-cols-4 gap-6 sm:gap-8">
-            {/* Pending Orders */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 mb-4">
-                <AlertCircle className="h-5 w-5 text-orange-500" />
-                <h2 className="text-lg sm:text-xl font-semibold text-gray-800">Pending Orders</h2>
-                <Badge variant="secondary" className="bg-orange-100 text-orange-700">
-                  {pendingOrders.length}
-                </Badge>
+          // Orders Section - Mobile Responsive Layout
+          <div className="space-y-6">
+            {/* Mobile: Single column stack */}
+            <div className="block xl:hidden space-y-6">
+              {/* Pending Orders */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 mb-4">
+                  <AlertCircle className="h-5 w-5 text-orange-500" />
+                  <h2 className="text-lg font-semibold text-gray-800">Pending Orders</h2>
+                  <Badge variant="secondary" className="bg-orange-100 text-orange-700">
+                    {pendingOrders.length}
+                  </Badge>
+                </div>
+                
+                {pendingOrders.map(order => (
+                  <OrderCard
+                    key={order.id}
+                    order={order}
+                    onUpdateStatus={updateOrderStatus}
+                  />
+                ))}
+                
+                {pendingOrders.length === 0 && (
+                  <Card className="border-dashed border-2 border-gray-300">
+                    <CardContent className="flex items-center justify-center p-6">
+                      <p className="text-gray-500 text-sm">No pending orders</p>
+                    </CardContent>
+                  </Card>
+                )}
               </div>
-              
-              {pendingOrders.map(order => (
-                <OrderCard
-                  key={order.id}
-                  order={order}
-                  onUpdateStatus={updateOrderStatus}
-                />
-              ))}
-              
-              {pendingOrders.length === 0 && (
-                <Card className="border-dashed border-2 border-gray-300">
-                  <CardContent className="flex items-center justify-center p-6 sm:p-8">
-                    <p className="text-gray-500 text-sm sm:text-base">No pending orders</p>
-                  </CardContent>
-                </Card>
-              )}
+
+              {/* Packing Orders */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 mb-4">
+                  <Package className="h-5 w-5 text-blue-500" />
+                  <h2 className="text-lg font-semibold text-gray-800">Packing</h2>
+                  <Badge variant="secondary" className="bg-blue-100 text-blue-700">
+                    {packingOrders.length}
+                  </Badge>
+                </div>
+                
+                {packingOrders.map(order => (
+                  <OrderCard
+                    key={order.id}
+                    order={order}
+                    onUpdateStatus={updateOrderStatus}
+                  />
+                ))}
+                
+                {packingOrders.length === 0 && (
+                  <Card className="border-dashed border-2 border-gray-300">
+                    <CardContent className="flex items-center justify-center p-6">
+                      <p className="text-gray-500 text-sm">No orders being packed</p>
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
+
+              {/* Out for Delivery Orders */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 mb-4">
+                  <TrendingUp className="h-5 w-5 text-purple-500" />
+                  <h2 className="text-lg font-semibold text-gray-800">Out for Delivery</h2>
+                  <Badge variant="secondary" className="bg-purple-100 text-purple-700">
+                    {outForDeliveryOrders.length}
+                  </Badge>
+                </div>
+                
+                {outForDeliveryOrders.map(order => (
+                  <OrderCard
+                    key={order.id}
+                    order={order}
+                    onUpdateStatus={updateOrderStatus}
+                  />
+                ))}
+                
+                {outForDeliveryOrders.length === 0 && (
+                  <Card className="border-dashed border-2 border-gray-300">
+                    <CardContent className="flex items-center justify-center p-6">
+                      <p className="text-gray-500 text-sm">No orders out for delivery</p>
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
+
+              {/* Completed Orders */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 mb-4">
+                  <CheckCircle className="h-5 w-5 text-green-500" />
+                  <h2 className="text-lg font-semibold text-gray-800">Completed</h2>
+                  <Badge variant="secondary" className="bg-green-100 text-green-700">
+                    {completedOrders.length}
+                  </Badge>
+                </div>
+                
+                {completedOrders.map(order => (
+                  <OrderCard
+                    key={order.id}
+                    order={order}
+                    onUpdateStatus={updateOrderStatus}
+                    hideActions={true}
+                  />
+                ))}
+                
+                {completedOrders.length === 0 && (
+                  <Card className="border-dashed border-2 border-gray-300">
+                    <CardContent className="flex items-center justify-center p-6">
+                      <p className="text-gray-500 text-sm">No completed orders today</p>
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
             </div>
 
-            {/* Packing Orders */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 mb-4">
-                <Package className="h-5 w-5 text-blue-500" />
-                <h2 className="text-lg sm:text-xl font-semibold text-gray-800">Packing</h2>
-                <Badge variant="secondary" className="bg-blue-100 text-blue-700">
-                  {packingOrders.length}
-                </Badge>
+            {/* Desktop: 4-column layout */}
+            <div className="hidden xl:grid xl:grid-cols-4 gap-6">
+              {/* Pending Orders */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 mb-4">
+                  <AlertCircle className="h-5 w-5 text-orange-500" />
+                  <h2 className="text-xl font-semibold text-gray-800">Pending</h2>
+                  <Badge variant="secondary" className="bg-orange-100 text-orange-700">
+                    {pendingOrders.length}
+                  </Badge>
+                </div>
+                
+                {pendingOrders.map(order => (
+                  <OrderCard
+                    key={order.id}
+                    order={order}
+                    onUpdateStatus={updateOrderStatus}
+                  />
+                ))}
+                
+                {pendingOrders.length === 0 && (
+                  <Card className="border-dashed border-2 border-gray-300">
+                    <CardContent className="flex items-center justify-center p-8">
+                      <p className="text-gray-500">No pending orders</p>
+                    </CardContent>
+                  </Card>
+                )}
               </div>
-              
-              {packingOrders.map(order => (
-                <OrderCard
-                  key={order.id}
-                  order={order}
-                  onUpdateStatus={updateOrderStatus}
-                />
-              ))}
-              
-              {packingOrders.length === 0 && (
-                <Card className="border-dashed border-2 border-gray-300">
-                  <CardContent className="flex items-center justify-center p-6 sm:p-8">
-                    <p className="text-gray-500 text-sm sm:text-base">No orders being packed</p>
-                  </CardContent>
-                </Card>
-              )}
-            </div>
 
-            {/* Out for Delivery Orders */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 mb-4">
-                <TrendingUp className="h-5 w-5 text-purple-500" />
-                <h2 className="text-lg sm:text-xl font-semibold text-gray-800">Out for Delivery</h2>
-                <Badge variant="secondary" className="bg-purple-100 text-purple-700">
-                  {outForDeliveryOrders.length}
-                </Badge>
+              {/* Packing Orders */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 mb-4">
+                  <Package className="h-5 w-5 text-blue-500" />
+                  <h2 className="text-xl font-semibold text-gray-800">Packing</h2>
+                  <Badge variant="secondary" className="bg-blue-100 text-blue-700">
+                    {packingOrders.length}
+                  </Badge>
+                </div>
+                
+                {packingOrders.map(order => (
+                  <OrderCard
+                    key={order.id}
+                    order={order}
+                    onUpdateStatus={updateOrderStatus}
+                  />
+                ))}
+                
+                {packingOrders.length === 0 && (
+                  <Card className="border-dashed border-2 border-gray-300">
+                    <CardContent className="flex items-center justify-center p-8">
+                      <p className="text-gray-500">No orders being packed</p>
+                    </CardContent>
+                  </Card>
+                )}
               </div>
-              
-              {outForDeliveryOrders.map(order => (
-                <OrderCard
-                  key={order.id}
-                  order={order}
-                  onUpdateStatus={updateOrderStatus}
-                />
-              ))}
-              
-              {outForDeliveryOrders.length === 0 && (
-                <Card className="border-dashed border-2 border-gray-300">
-                  <CardContent className="flex items-center justify-center p-6 sm:p-8">
-                    <p className="text-gray-500 text-sm sm:text-base">No orders out for delivery</p>
-                  </CardContent>
-                </Card>
-              )}
-            </div>
 
-            {/* Completed Orders */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 mb-4">
-                <CheckCircle className="h-5 w-5 text-green-500" />
-                <h2 className="text-lg sm:text-xl font-semibold text-gray-800">Completed</h2>
-                <Badge variant="secondary" className="bg-green-100 text-green-700">
-                  {completedOrders.length}
-                </Badge>
+              {/* Out for Delivery Orders */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 mb-4">
+                  <TrendingUp className="h-5 w-5 text-purple-500" />
+                  <h2 className="text-xl font-semibold text-gray-800">Out for Delivery</h2>
+                  <Badge variant="secondary" className="bg-purple-100 text-purple-700">
+                    {outForDeliveryOrders.length}
+                  </Badge>
+                </div>
+                
+                {outForDeliveryOrders.map(order => (
+                  <OrderCard
+                    key={order.id}
+                    order={order}
+                    onUpdateStatus={updateOrderStatus}
+                  />
+                ))}
+                
+                {outForDeliveryOrders.length === 0 && (
+                  <Card className="border-dashed border-2 border-gray-300">
+                    <CardContent className="flex items-center justify-center p-8">
+                      <p className="text-gray-500">No orders out for delivery</p>
+                    </CardContent>
+                  </Card>
+                )}
               </div>
-              
-              {completedOrders.map(order => (
-                <OrderCard
-                  key={order.id}
-                  order={order}
-                  onUpdateStatus={updateOrderStatus}
-                  hideActions={true}
-                />
-              ))}
-              
-              {completedOrders.length === 0 && (
-                <Card className="border-dashed border-2 border-gray-300">
-                  <CardContent className="flex items-center justify-center p-6 sm:p-8">
-                    <p className="text-gray-500 text-sm sm:text-base">No completed orders today</p>
-                  </CardContent>
-                </Card>
-              )}
+
+              {/* Completed Orders */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 mb-4">
+                  <CheckCircle className="h-5 w-5 text-green-500" />
+                  <h2 className="text-xl font-semibold text-gray-800">Completed</h2>
+                  <Badge variant="secondary" className="bg-green-100 text-green-700">
+                    {completedOrders.length}
+                  </Badge>
+                </div>
+                
+                {completedOrders.map(order => (
+                  <OrderCard
+                    key={order.id}
+                    order={order}
+                    onUpdateStatus={updateOrderStatus}
+                    hideActions={true}
+                  />
+                ))}
+                
+                {completedOrders.length === 0 && (
+                  <Card className="border-dashed border-2 border-gray-300">
+                    <CardContent className="flex items-center justify-center p-8">
+                      <p className="text-gray-500">No completed orders today</p>
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
             </div>
           </div>
         ) : (
