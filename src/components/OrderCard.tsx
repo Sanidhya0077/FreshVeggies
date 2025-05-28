@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Eye, Phone, MapPin, Package, CheckCircle, Clock } from "lucide-react";
+import { Eye, Phone, MapPin, Package, CheckCircle, Clock, Truck } from "lucide-react";
 
 const OrderCard = ({ order, onUpdateStatus, hideActions = false }) => {
   const [showDetails, setShowDetails] = useState(false);
@@ -13,8 +13,10 @@ const OrderCard = ({ order, onUpdateStatus, hideActions = false }) => {
     switch (status) {
       case 'pending':
         return 'bg-orange-100 text-orange-700 border-orange-200';
-      case 'preparing':
+      case 'packing':
         return 'bg-blue-100 text-blue-700 border-blue-200';
+      case 'out-for-delivery':
+        return 'bg-purple-100 text-purple-700 border-purple-200';
       case 'completed':
         return 'bg-green-100 text-green-700 border-green-200';
       default:
@@ -26,12 +28,23 @@ const OrderCard = ({ order, onUpdateStatus, hideActions = false }) => {
     switch (status) {
       case 'pending':
         return <Clock className="h-3 w-3" />;
-      case 'preparing':
+      case 'packing':
         return <Package className="h-3 w-3" />;
+      case 'out-for-delivery':
+        return <Truck className="h-3 w-3" />;
       case 'completed':
         return <CheckCircle className="h-3 w-3" />;
       default:
         return null;
+    }
+  };
+
+  const getStatusDisplayName = (status) => {
+    switch (status) {
+      case 'out-for-delivery':
+        return 'Out for Delivery';
+      default:
+        return status;
     }
   };
 
@@ -45,7 +58,7 @@ const OrderCard = ({ order, onUpdateStatus, hideActions = false }) => {
           </div>
           <Badge className={`${getStatusColor(order.status)} flex items-center gap-1`}>
             {getStatusIcon(order.status)}
-            {order.status}
+            {getStatusDisplayName(order.status)}
           </Badge>
         </div>
       </CardHeader>
@@ -126,18 +139,27 @@ const OrderCard = ({ order, onUpdateStatus, hideActions = false }) => {
                   <Button 
                     size="sm" 
                     className="flex-1 bg-blue-500 hover:bg-blue-600"
-                    onClick={() => onUpdateStatus(order.id, 'preparing')}
+                    onClick={() => onUpdateStatus(order.id, 'packing')}
                   >
-                    Start Preparing
+                    Start Packing
                   </Button>
                 )}
-                {order.status === 'preparing' && (
+                {order.status === 'packing' && (
+                  <Button 
+                    size="sm" 
+                    className="flex-1 bg-purple-500 hover:bg-purple-600"
+                    onClick={() => onUpdateStatus(order.id, 'out-for-delivery')}
+                  >
+                    Send for Delivery
+                  </Button>
+                )}
+                {order.status === 'out-for-delivery' && (
                   <Button 
                     size="sm" 
                     className="flex-1 bg-green-500 hover:bg-green-600"
                     onClick={() => onUpdateStatus(order.id, 'completed')}
                   >
-                    Mark Complete
+                    Mark Delivered
                   </Button>
                 )}
               </>

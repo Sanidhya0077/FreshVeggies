@@ -153,7 +153,8 @@ const Index = () => {
     );
     
     const statusMessages = {
-      preparing: "Order moved to preparing",
+      packing: "Order moved to packing",
+      "out-for-delivery": "Order is out for delivery",
       completed: "Order completed successfully"
     };
     
@@ -196,7 +197,8 @@ const Index = () => {
   };
 
   const pendingOrders = orders.filter(order => order.status === 'pending');
-  const preparingOrders = orders.filter(order => order.status === 'preparing');
+  const packingOrders = orders.filter(order => order.status === 'packing');
+  const outForDeliveryOrders = orders.filter(order => order.status === 'out-for-delivery');
   const completedOrders = orders.filter(order => order.status === 'completed');
   const totalRevenue = orders.filter(order => order.status === 'completed').reduce((sum, order) => sum + order.total, 0);
 
@@ -269,8 +271,8 @@ const Index = () => {
             color="orange"
           />
           <StatsCard
-            title="Preparing"
-            value={preparingOrders.length}
+            title="Packing"
+            value={packingOrders.length}
             icon={Package}
             color="blue"
           />
@@ -291,7 +293,7 @@ const Index = () => {
         {/* Content based on active tab */}
         {activeTab === "orders" ? (
           // Orders Section
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 xl:grid-cols-4 gap-6 sm:gap-8">
             {/* Pending Orders */}
             <div className="space-y-4">
               <div className="flex items-center gap-2 mb-4">
@@ -319,17 +321,17 @@ const Index = () => {
               )}
             </div>
 
-            {/* Preparing Orders */}
+            {/* Packing Orders */}
             <div className="space-y-4">
               <div className="flex items-center gap-2 mb-4">
                 <Package className="h-5 w-5 text-blue-500" />
-                <h2 className="text-lg sm:text-xl font-semibold text-gray-800">Preparing</h2>
+                <h2 className="text-lg sm:text-xl font-semibold text-gray-800">Packing</h2>
                 <Badge variant="secondary" className="bg-blue-100 text-blue-700">
-                  {preparingOrders.length}
+                  {packingOrders.length}
                 </Badge>
               </div>
               
-              {preparingOrders.map(order => (
+              {packingOrders.map(order => (
                 <OrderCard
                   key={order.id}
                   order={order}
@@ -337,10 +339,37 @@ const Index = () => {
                 />
               ))}
               
-              {preparingOrders.length === 0 && (
+              {packingOrders.length === 0 && (
                 <Card className="border-dashed border-2 border-gray-300">
                   <CardContent className="flex items-center justify-center p-6 sm:p-8">
-                    <p className="text-gray-500 text-sm sm:text-base">No orders being prepared</p>
+                    <p className="text-gray-500 text-sm sm:text-base">No orders being packed</p>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+
+            {/* Out for Delivery Orders */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 mb-4">
+                <TrendingUp className="h-5 w-5 text-purple-500" />
+                <h2 className="text-lg sm:text-xl font-semibold text-gray-800">Out for Delivery</h2>
+                <Badge variant="secondary" className="bg-purple-100 text-purple-700">
+                  {outForDeliveryOrders.length}
+                </Badge>
+              </div>
+              
+              {outForDeliveryOrders.map(order => (
+                <OrderCard
+                  key={order.id}
+                  order={order}
+                  onUpdateStatus={updateOrderStatus}
+                />
+              ))}
+              
+              {outForDeliveryOrders.length === 0 && (
+                <Card className="border-dashed border-2 border-gray-300">
+                  <CardContent className="flex items-center justify-center p-6 sm:p-8">
+                    <p className="text-gray-500 text-sm sm:text-base">No orders out for delivery</p>
                   </CardContent>
                 </Card>
               )}
