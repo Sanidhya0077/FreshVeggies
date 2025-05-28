@@ -1,5 +1,6 @@
+
 import { useState, useEffect } from "react";
-import { Bell, Package, TrendingUp, Users, Eye, CheckCircle, Clock, AlertCircle, Plus, Menu } from "lucide-react";
+import { Bell, Package, TrendingUp, Users, Eye, CheckCircle, Clock, AlertCircle, Plus, Menu, ShoppingCart } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
