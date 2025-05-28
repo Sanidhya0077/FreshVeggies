@@ -152,9 +152,14 @@ const Index = () => {
       )
     );
     
+    const statusMessages = {
+      preparing: "Order moved to preparing",
+      completed: "Order completed successfully"
+    };
+    
     toast({
-      title: "Order Updated",
-      description: `Order ${orderId} status changed to ${newStatus}`,
+      title: "Order Updated! 📦",
+      description: statusMessages[newStatus] || `Order ${orderId} status changed to ${newStatus}`,
     });
   };
 
