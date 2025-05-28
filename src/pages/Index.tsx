@@ -1,6 +1,5 @@
-
 import { useState, useEffect } from "react";
-import { Bell, Package, TrendingUp, Users, Eye, CheckCircle, Clock, AlertCircle } from "lucide-react";
+import { Bell, Package, TrendingUp, Users, Eye, CheckCircle, Clock, AlertCircle, Plus } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -8,6 +7,8 @@ import { useToast } from "@/hooks/use-toast";
 import OrderCard from "@/components/OrderCard";
 import NotificationPanel from "@/components/NotificationPanel";
 import StatsCard from "@/components/StatsCard";
+import ProductModal from "@/components/ProductModal";
+import ProductsList from "@/components/ProductsList";
 
 // Mock data for orders
 const mockOrders = [
@@ -67,10 +68,42 @@ const mockOrders = [
   }
 ];
 
+// Mock data for products
+const mockProducts = [
+  {
+    id: "PROD-001",
+    name: "Fresh Tomatoes",
+    price: 4.00,
+    unit: "kg",
+    stock: 25,
+    category: "Vegetables"
+  },
+  {
+    id: "PROD-002",
+    name: "Organic Carrots",
+    price: 3.50,
+    unit: "kg",
+    stock: 15,
+    category: "Vegetables"
+  },
+  {
+    id: "PROD-003",
+    name: "Red Onions",
+    price: 2.50,
+    unit: "kg",
+    stock: 2,
+    category: "Vegetables"
+  }
+];
+
 const Index = () => {
   const [orders, setOrders] = useState(mockOrders);
+  const [products, setProducts] = useState(mockProducts);
   const [notifications, setNotifications] = useState([]);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showProductModal, setShowProductModal] = useState(false);
+  const [editingProduct, setEditingProduct] = useState(null);
+  const [activeTab, setActiveTab] = useState("orders");
   const { toast } = useToast();
 
   // Simulate new orders coming in
@@ -125,6 +158,38 @@ const Index = () => {
     });
   };
 
+  const handleSaveProduct = (productData) => {
+    if (editingProduct) {
+      // Update existing product
+      setProducts(prev => 
+        prev.map(product => 
+          product.id === editingProduct.id 
+            ? { ...productData, id: editingProduct.id }
+            : product
+        )
+      );
+    } else {
+      // Add new product
+      const newProduct = {
+        ...productData,
+        id: `PROD-${String(products.length + 1).padStart(3, '0')}`
+      };
+      setProducts(prev => [...prev, newProduct]);
+    }
+    
+    setEditingProduct(null);
+  };
+
+  const handleEditProduct = (product) => {
+    setEditingProduct(product);
+    setShowProductModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowProductModal(false);
+    setEditingProduct(null);
+  };
+
   const pendingOrders = orders.filter(order => order.status === 'pending');
   const preparingOrders = orders.filter(order => order.status === 'preparing');
   const completedOrders = orders.filter(order => order.status === 'completed');
@@ -137,10 +202,18 @@ const Index = () => {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 gap-4">
           <div className="w-full sm:w-auto">
             <h1 className="text-2xl sm:text-3xl font-bold text-green-800 mb-2">Fresh Veggie Dashboard</h1>
-            <p className="text-green-600 text-sm sm:text-base">Manage your vegetable orders efficiently</p>
+            <p className="text-green-600 text-sm sm:text-base">Manage your vegetable orders and inventory efficiently</p>
           </div>
           
-          <div className="relative w-full sm:w-auto flex justify-end">
+          <div className="relative w-full sm:w-auto flex justify-end gap-2">
+            <Button
+              onClick={() => setShowProductModal(true)}
+              className="bg-green-600 hover:bg-green-700 text-white"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Add Product
+            </Button>
+            
             <Button
               variant="outline"
               size="icon"
@@ -162,6 +235,24 @@ const Index = () => {
               />
             )}
           </div>
+        </div>
+
+        {/* Navigation Tabs */}
+        <div className="flex gap-4 mb-6">
+          <Button
+            variant={activeTab === "orders" ? "default" : "outline"}
+            onClick={() => setActiveTab("orders")}
+            className={activeTab === "orders" ? "bg-green-600 text-white" : "border-green-200 text-green-700 hover:bg-green-50"}
+          >
+            Orders
+          </Button>
+          <Button
+            variant={activeTab === "products" ? "default" : "outline"}
+            onClick={() => setActiveTab("products")}
+            className={activeTab === "products" ? "bg-green-600 text-white" : "border-green-200 text-green-700 hover:bg-green-50"}
+          >
+            Products
+          </Button>
         </div>
 
         {/* Stats Cards */}
@@ -192,90 +283,104 @@ const Index = () => {
           />
         </div>
 
-        {/* Orders Section */}
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 sm:gap-8">
-          {/* Pending Orders */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 mb-4">
-              <AlertCircle className="h-5 w-5 text-orange-500" />
-              <h2 className="text-lg sm:text-xl font-semibold text-gray-800">Pending Orders</h2>
-              <Badge variant="secondary" className="bg-orange-100 text-orange-700">
-                {pendingOrders.length}
-              </Badge>
+        {/* Content based on active tab */}
+        {activeTab === "orders" ? (
+          // Orders Section
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 sm:gap-8">
+            {/* Pending Orders */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 mb-4">
+                <AlertCircle className="h-5 w-5 text-orange-500" />
+                <h2 className="text-lg sm:text-xl font-semibold text-gray-800">Pending Orders</h2>
+                <Badge variant="secondary" className="bg-orange-100 text-orange-700">
+                  {pendingOrders.length}
+                </Badge>
+              </div>
+              
+              {pendingOrders.map(order => (
+                <OrderCard
+                  key={order.id}
+                  order={order}
+                  onUpdateStatus={updateOrderStatus}
+                />
+              ))}
+              
+              {pendingOrders.length === 0 && (
+                <Card className="border-dashed border-2 border-gray-300">
+                  <CardContent className="flex items-center justify-center p-6 sm:p-8">
+                    <p className="text-gray-500 text-sm sm:text-base">No pending orders</p>
+                  </CardContent>
+                </Card>
+              )}
             </div>
-            
-            {pendingOrders.map(order => (
-              <OrderCard
-                key={order.id}
-                order={order}
-                onUpdateStatus={updateOrderStatus}
-              />
-            ))}
-            
-            {pendingOrders.length === 0 && (
-              <Card className="border-dashed border-2 border-gray-300">
-                <CardContent className="flex items-center justify-center p-6 sm:p-8">
-                  <p className="text-gray-500 text-sm sm:text-base">No pending orders</p>
-                </CardContent>
-              </Card>
-            )}
-          </div>
 
-          {/* Preparing Orders */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 mb-4">
-              <Package className="h-5 w-5 text-blue-500" />
-              <h2 className="text-lg sm:text-xl font-semibold text-gray-800">Preparing</h2>
-              <Badge variant="secondary" className="bg-blue-100 text-blue-700">
-                {preparingOrders.length}
-              </Badge>
+            {/* Preparing Orders */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 mb-4">
+                <Package className="h-5 w-5 text-blue-500" />
+                <h2 className="text-lg sm:text-xl font-semibold text-gray-800">Preparing</h2>
+                <Badge variant="secondary" className="bg-blue-100 text-blue-700">
+                  {preparingOrders.length}
+                </Badge>
+              </div>
+              
+              {preparingOrders.map(order => (
+                <OrderCard
+                  key={order.id}
+                  order={order}
+                  onUpdateStatus={updateOrderStatus}
+                />
+              ))}
+              
+              {preparingOrders.length === 0 && (
+                <Card className="border-dashed border-2 border-gray-300">
+                  <CardContent className="flex items-center justify-center p-6 sm:p-8">
+                    <p className="text-gray-500 text-sm sm:text-base">No orders being prepared</p>
+                  </CardContent>
+                </Card>
+              )}
             </div>
-            
-            {preparingOrders.map(order => (
-              <OrderCard
-                key={order.id}
-                order={order}
-                onUpdateStatus={updateOrderStatus}
-              />
-            ))}
-            
-            {preparingOrders.length === 0 && (
-              <Card className="border-dashed border-2 border-gray-300">
-                <CardContent className="flex items-center justify-center p-6 sm:p-8">
-                  <p className="text-gray-500 text-sm sm:text-base">No orders being prepared</p>
-                </CardContent>
-              </Card>
-            )}
-          </div>
 
-          {/* Completed Orders */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 mb-4">
-              <CheckCircle className="h-5 w-5 text-green-500" />
-              <h2 className="text-lg sm:text-xl font-semibold text-gray-800">Completed</h2>
-              <Badge variant="secondary" className="bg-green-100 text-green-700">
-                {completedOrders.length}
-              </Badge>
+            {/* Completed Orders */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 mb-4">
+                <CheckCircle className="h-5 w-5 text-green-500" />
+                <h2 className="text-lg sm:text-xl font-semibold text-gray-800">Completed</h2>
+                <Badge variant="secondary" className="bg-green-100 text-green-700">
+                  {completedOrders.length}
+                </Badge>
+              </div>
+              
+              {completedOrders.map(order => (
+                <OrderCard
+                  key={order.id}
+                  order={order}
+                  onUpdateStatus={updateOrderStatus}
+                  hideActions={true}
+                />
+              ))}
+              
+              {completedOrders.length === 0 && (
+                <Card className="border-dashed border-2 border-gray-300">
+                  <CardContent className="flex items-center justify-center p-6 sm:p-8">
+                    <p className="text-gray-500 text-sm sm:text-base">No completed orders today</p>
+                  </CardContent>
+                </Card>
+              )}
             </div>
-            
-            {completedOrders.map(order => (
-              <OrderCard
-                key={order.id}
-                order={order}
-                onUpdateStatus={updateOrderStatus}
-                hideActions={true}
-              />
-            ))}
-            
-            {completedOrders.length === 0 && (
-              <Card className="border-dashed border-2 border-gray-300">
-                <CardContent className="flex items-center justify-center p-6 sm:p-8">
-                  <p className="text-gray-500 text-sm sm:text-base">No completed orders today</p>
-                </CardContent>
-              </Card>
-            )}
           </div>
-        </div>
+        ) : (
+          // Products Section
+          <ProductsList products={products} onEditProduct={handleEditProduct} />
+        )}
+
+        {/* Product Modal */}
+        <ProductModal
+          isOpen={showProductModal}
+          onClose={handleCloseModal}
+          onSave={handleSaveProduct}
+          product={editingProduct}
+        />
       </div>
     </div>
   );
