@@ -18,17 +18,17 @@ const NotificationPanel = ({ notifications, onClose }) => {
   };
 
   return (
-    <div className="absolute top-12 right-0 w-80 z-50">
+    <div className="absolute top-12 right-0 w-72 sm:w-80 z-50">
       <Card className="border-2 border-green-200 shadow-lg">
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center justify-between">
-            <span className="text-lg">Notifications</span>
+            <span className="text-base sm:text-lg">Notifications</span>
             <Badge variant="secondary">{notifications.length}</Badge>
           </CardTitle>
         </CardHeader>
-        <CardContent className="max-h-80 overflow-y-auto">
+        <CardContent className="max-h-64 sm:max-h-80 overflow-y-auto">
           {notifications.length === 0 ? (
-            <p className="text-gray-500 text-center py-4">No new notifications</p>
+            <p className="text-gray-500 text-center py-4 text-sm sm:text-base">No new notifications</p>
           ) : (
             <div className="space-y-3">
               {notifications.map((notification) => (
@@ -42,7 +42,7 @@ const NotificationPanel = ({ notifications, onClose }) => {
                       <h4 className="text-sm font-semibold text-gray-800">
                         {notification.title}
                       </h4>
-                      <p className="text-sm text-gray-600 mt-1">
+                      <p className="text-xs sm:text-sm text-gray-600 mt-1">
                         {notification.message}
                       </p>
                       <p className="text-xs text-gray-400 mt-2">

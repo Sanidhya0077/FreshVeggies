@@ -131,16 +131,16 @@ const Index = () => {
   const totalRevenue = orders.filter(order => order.status === 'completed').reduce((sum, order) => sum + order.total, 0);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100">
-      <div className="container mx-auto p-6">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 px-4 sm:px-6">
+      <div className="container mx-auto py-4 sm:py-6 max-w-7xl">
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-green-800 mb-2">Fresh Veggie Dashboard</h1>
-            <p className="text-green-600">Manage your vegetable orders efficiently</p>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 gap-4">
+          <div className="w-full sm:w-auto">
+            <h1 className="text-2xl sm:text-3xl font-bold text-green-800 mb-2">Fresh Veggie Dashboard</h1>
+            <p className="text-green-600 text-sm sm:text-base">Manage your vegetable orders efficiently</p>
           </div>
           
-          <div className="relative">
+          <div className="relative w-full sm:w-auto flex justify-end">
             <Button
               variant="outline"
               size="icon"
@@ -165,7 +165,7 @@ const Index = () => {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
           <StatsCard
             title="Pending Orders"
             value={pendingOrders.length}
@@ -193,12 +193,12 @@ const Index = () => {
         </div>
 
         {/* Orders Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 sm:gap-8">
           {/* Pending Orders */}
           <div className="space-y-4">
             <div className="flex items-center gap-2 mb-4">
               <AlertCircle className="h-5 w-5 text-orange-500" />
-              <h2 className="text-xl font-semibold text-gray-800">Pending Orders</h2>
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-800">Pending Orders</h2>
               <Badge variant="secondary" className="bg-orange-100 text-orange-700">
                 {pendingOrders.length}
               </Badge>
@@ -214,8 +214,8 @@ const Index = () => {
             
             {pendingOrders.length === 0 && (
               <Card className="border-dashed border-2 border-gray-300">
-                <CardContent className="flex items-center justify-center p-8">
-                  <p className="text-gray-500">No pending orders</p>
+                <CardContent className="flex items-center justify-center p-6 sm:p-8">
+                  <p className="text-gray-500 text-sm sm:text-base">No pending orders</p>
                 </CardContent>
               </Card>
             )}
@@ -225,7 +225,7 @@ const Index = () => {
           <div className="space-y-4">
             <div className="flex items-center gap-2 mb-4">
               <Package className="h-5 w-5 text-blue-500" />
-              <h2 className="text-xl font-semibold text-gray-800">Preparing</h2>
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-800">Preparing</h2>
               <Badge variant="secondary" className="bg-blue-100 text-blue-700">
                 {preparingOrders.length}
               </Badge>
@@ -241,8 +241,8 @@ const Index = () => {
             
             {preparingOrders.length === 0 && (
               <Card className="border-dashed border-2 border-gray-300">
-                <CardContent className="flex items-center justify-center p-8">
-                  <p className="text-gray-500">No orders being prepared</p>
+                <CardContent className="flex items-center justify-center p-6 sm:p-8">
+                  <p className="text-gray-500 text-sm sm:text-base">No orders being prepared</p>
                 </CardContent>
               </Card>
             )}
@@ -252,7 +252,7 @@ const Index = () => {
           <div className="space-y-4">
             <div className="flex items-center gap-2 mb-4">
               <CheckCircle className="h-5 w-5 text-green-500" />
-              <h2 className="text-xl font-semibold text-gray-800">Completed</h2>
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-800">Completed</h2>
               <Badge variant="secondary" className="bg-green-100 text-green-700">
                 {completedOrders.length}
               </Badge>
@@ -269,8 +269,8 @@ const Index = () => {
             
             {completedOrders.length === 0 && (
               <Card className="border-dashed border-2 border-gray-300">
-                <CardContent className="flex items-center justify-center p-8">
-                  <p className="text-gray-500">No completed orders today</p>
+                <CardContent className="flex items-center justify-center p-6 sm:p-8">
+                  <p className="text-gray-500 text-sm sm:text-base">No completed orders today</p>
                 </CardContent>
               </Card>
             )}
