@@ -1,5 +1,4 @@
-
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -9,10 +8,10 @@ import { useNavigate } from "react-router-dom";
 const CustomerTracking = () => {
   const navigate = useNavigate();
   const [order, setOrder] = useState<any>(null);
-  const [currentStatus, setCurrentStatus] = useState('confirmed');
+  const [currentStatus, setCurrentStatus] = useState("confirmed");
 
   useEffect(() => {
-    const savedOrder = localStorage.getItem('currentOrder');
+    const savedOrder = localStorage.getItem("currentOrder");
     if (savedOrder) {
       setOrder(JSON.parse(savedOrder));
     }
@@ -21,18 +20,27 @@ const CustomerTracking = () => {
   useEffect(() => {
     if (!order) return;
 
-    const statusProgression = ['confirmed', 'preparing', 'packing', 'out-for-delivery', 'delivered'];
+    const statusProgression = [
+      "confirmed",
+      "preparing",
+      "packing",
+      "out-for-delivery",
+      "delivered",
+    ];
     let currentIndex = statusProgression.indexOf(currentStatus);
 
     const interval = setInterval(() => {
       if (currentIndex < statusProgression.length - 1) {
         currentIndex++;
         setCurrentStatus(statusProgression[currentIndex]);
-        
+
         // Update order in localStorage
-        const updatedOrder = { ...order, status: statusProgression[currentIndex] };
+        const updatedOrder = {
+          ...order,
+          status: statusProgression[currentIndex],
+        };
         setOrder(updatedOrder);
-        localStorage.setItem('currentOrder', JSON.stringify(updatedOrder));
+        localStorage.setItem("currentOrder", JSON.stringify(updatedOrder));
       } else {
         clearInterval(interval);
       }
@@ -43,15 +51,14 @@ const CustomerTracking = () => {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'confirmed':
+      case "confirmed":
         return <CheckCircle className="h-5 w-5" />;
-      case 'preparing':
+
+      case "packing":
         return <Package className="h-5 w-5" />;
-      case 'packing':
+      case "out-for-delivery":
         return <Package className="h-5 w-5" />;
-      case 'out-for-delivery':
-        return <Package className="h-5 w-5" />;
-      case 'delivered':
+      case "delivered":
         return <CheckCircle className="h-5 w-5" />;
       default:
         return <Package className="h-5 w-5" />;
@@ -59,28 +66,32 @@ const CustomerTracking = () => {
   };
 
   const getStatusColor = (status: string, currentStatus: string) => {
-    const statusOrder = ['confirmed', 'preparing', 'packing', 'out-for-delivery', 'delivered'];
+    const statusOrder = [
+      "confirmed",
+      "packing",
+      "out-for-delivery",
+      "delivered",
+    ];
     const currentIndex = statusOrder.indexOf(currentStatus);
     const statusIndex = statusOrder.indexOf(status);
-    
+
     if (statusIndex <= currentIndex) {
-      return 'bg-green-500 text-white';
+      return "bg-green-500 text-white";
     }
-    return 'bg-gray-200 text-gray-600';
+    return "bg-gray-200 text-gray-600";
   };
 
   const getStatusLabel = (status: string) => {
     switch (status) {
-      case 'confirmed':
-        return 'Order Confirmed';
-      case 'preparing':
-        return 'Preparing';
-      case 'packing':
-        return 'Packing';
-      case 'out-for-delivery':
-        return 'Out for Delivery';
-      case 'delivered':
-        return 'Delivered';
+      case "confirmed":
+        return "Order Confirmed";
+
+      case "packing":
+        return "Packing";
+      case "out-for-delivery":
+        return "Out for Delivery";
+      case "delivered":
+        return "Delivered";
       default:
         return status;
     }
@@ -93,9 +104,16 @@ const CustomerTracking = () => {
           <Card className="text-center py-12">
             <CardContent>
               <Package className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-              <h2 className="text-xl font-semibold text-gray-600 mb-2">No active orders</h2>
-              <p className="text-gray-500 mb-6">Place an order to track it here!</p>
-              <Button onClick={() => navigate('/customer-products')} className="bg-green-500 hover:bg-green-600">
+              <h2 className="text-xl font-semibold text-gray-600 mb-2">
+                No active orders
+              </h2>
+              <p className="text-gray-500 mb-6">
+                Place an order to track it here!
+              </p>
+              <Button
+                onClick={() => navigate("/customer-products")}
+                className="bg-green-500 hover:bg-green-600"
+              >
                 Start Shopping
               </Button>
             </CardContent>
@@ -106,11 +124,24 @@ const CustomerTracking = () => {
   }
 
   const statusSteps = [
-    { key: 'confirmed', label: 'Order Confirmed', time: '2:30 PM' },
-    { key: 'preparing', label: 'Preparing', time: currentStatus !== 'confirmed' ? '2:45 PM' : 'Pending' },
-    { key: 'packing', label: 'Packing', time: ['packing', 'out-for-delivery', 'delivered'].includes(currentStatus) ? '3:00 PM' : 'Pending' },
-    { key: 'out-for-delivery', label: 'Out for Delivery', time: ['out-for-delivery', 'delivered'].includes(currentStatus) ? '3:15 PM' : 'Pending' },
-    { key: 'delivered', label: 'Delivered', time: currentStatus === 'delivered' ? '3:45 PM' : 'Pending' }
+    { key: "confirmed", label: "Order Confirmed", time: "2:30 PM" },
+    {
+      key: "packing",
+      label: "Packing",
+      time: currentStatus !== "confirmed" ? "2:45 PM" : "Pending",
+    },
+    {
+      key: "out-for-delivery",
+      label: "Out for Delivery",
+      time: ["out-for-delivery", "delivered"].includes(currentStatus)
+        ? "3:15 PM"
+        : "Pending",
+    },
+    {
+      key: "delivered",
+      label: "Delivered",
+      time: currentStatus === "delivered" ? "3:45 PM" : "Pending",
+    },
   ];
 
   return (
@@ -119,9 +150,14 @@ const CustomerTracking = () => {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <div className="flex items-center gap-2">
             <Package className="h-6 w-6 text-green-500" />
-            <h1 className="text-2xl font-bold text-gray-800">Track Your Order</h1>
+            <h1 className="text-2xl font-bold text-gray-800">
+              Track Your Order
+            </h1>
           </div>
-          <Button onClick={() => navigate('/customer-products')} variant="outline">
+          <Button
+            onClick={() => navigate("/customer-products")}
+            variant="outline"
+          >
             Order Again
           </Button>
         </div>
@@ -143,7 +179,9 @@ const CustomerTracking = () => {
                 <div className="space-y-1">
                   {order.items.map((item: any) => (
                     <div key={item.id} className="flex justify-between text-sm">
-                      <span>{item.name} x {item.quantity}</span>
+                      <span>
+                        {item.name} x {item.quantity}
+                      </span>
                       <span>${(item.price * item.quantity).toFixed(2)}</span>
                     </div>
                   ))}
@@ -169,7 +207,12 @@ const CustomerTracking = () => {
             <div className="space-y-4">
               {statusSteps.map((step, index) => (
                 <div key={step.key} className="flex items-center gap-4">
-                  <div className={`flex items-center justify-center w-10 h-10 rounded-full ${getStatusColor(step.key, currentStatus)}`}>
+                  <div
+                    className={`flex items-center justify-center w-10 h-10 rounded-full ${getStatusColor(
+                      step.key,
+                      currentStatus
+                    )}`}
+                  >
                     {getStatusIcon(step.key)}
                   </div>
                   <div className="flex-1">
@@ -177,22 +220,28 @@ const CustomerTracking = () => {
                       <span className="font-medium">{step.label}</span>
                       <span className="text-sm text-gray-500">{step.time}</span>
                     </div>
-                    {step.key === currentStatus && currentStatus !== 'delivered' && (
-                      <p className="text-sm text-blue-600 mt-1">In progress...</p>
-                    )}
+                    {step.key === currentStatus &&
+                      currentStatus !== "delivered" && (
+                        <p className="text-sm text-blue-600 mt-1">
+                          In progress...
+                        </p>
+                      )}
                   </div>
                 </div>
               ))}
             </div>
-            
-            {currentStatus === 'delivered' && (
+
+            {currentStatus === "delivered" && (
               <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
                 <div className="flex items-center gap-2 text-green-700">
                   <CheckCircle className="h-5 w-5" />
-                  <span className="font-semibold">Order Delivered Successfully!</span>
+                  <span className="font-semibold">
+                    Order Delivered Successfully!
+                  </span>
                 </div>
                 <p className="text-sm text-green-600 mt-1">
-                  Thank you for choosing us! We hope you enjoy your fresh produce.
+                  Thank you for choosing us! We hope you enjoy your fresh
+                  produce.
                 </p>
               </div>
             )}

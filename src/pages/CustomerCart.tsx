@@ -1,5 +1,4 @@
-
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,7 +20,7 @@ const CustomerCart = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
 
   useEffect(() => {
-    const savedCart = localStorage.getItem('cart');
+    const savedCart = localStorage.getItem("cart");
     if (savedCart) {
       setCart(JSON.parse(savedCart));
     }
@@ -32,31 +31,37 @@ const CustomerCart = () => {
       removeFromCart(id);
       return;
     }
-    
-    setCart(prevCart => {
-      const updatedCart = prevCart.map(item =>
+
+    setCart((prevCart) => {
+      const updatedCart = prevCart.map((item) =>
         item.id === id ? { ...item, quantity } : item
       );
-      localStorage.setItem('cart', JSON.stringify(updatedCart));
+      localStorage.setItem("cart", JSON.stringify(updatedCart));
       return updatedCart;
     });
   };
 
   const removeFromCart = (id: string) => {
-    setCart(prevCart => {
-      const updatedCart = prevCart.filter(item => item.id !== id);
-      localStorage.setItem('cart', JSON.stringify(updatedCart));
+    setCart((prevCart) => {
+      const updatedCart = prevCart.filter((item) => item.id !== id);
+      localStorage.setItem("cart", JSON.stringify(updatedCart));
       return updatedCart;
     });
   };
 
   const getCartTotal = () => {
-    return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+    return cart.reduce((total, item) => total + item.price * item.quantity, 0);
   };
 
   const proceedToCheckout = () => {
     if (cart.length === 0) return;
-    navigate('/customer-payment');
+    navigate("/customer-payment");
+  };
+
+  const continueShopping = () => {
+    // Ensure cart is saved before navigating
+    localStorage.setItem("cart", JSON.stringify(cart));
+    navigate("/customer-products");
   };
 
   if (cart.length === 0) {
@@ -67,13 +72,20 @@ const CustomerCart = () => {
             <ShoppingCart className="h-6 w-6 text-green-500" />
             <h1 className="text-2xl font-bold text-gray-800">Shopping Cart</h1>
           </div>
-          
+
           <Card className="text-center py-12">
             <CardContent>
               <Package className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-              <h2 className="text-xl font-semibold text-gray-600 mb-2">Your cart is empty</h2>
-              <p className="text-gray-500 mb-6">Add some fresh produce to get started!</p>
-              <Button onClick={() => navigate('/customer-products')} className="bg-green-500 hover:bg-green-600">
+              <h2 className="text-xl font-semibold text-gray-600 mb-2">
+                Your cart is empty
+              </h2>
+              <p className="text-gray-500 mb-6">
+                Add some fresh produce to get started!
+              </p>
+              <Button
+                onClick={continueShopping}
+                className="bg-green-500 hover:bg-green-600"
+              >
                 Continue Shopping
               </Button>
             </CardContent>
@@ -92,8 +104,8 @@ const CustomerCart = () => {
             <ShoppingCart className="h-6 w-6 text-green-500" />
             <h1 className="text-2xl font-bold text-gray-800">Shopping Cart</h1>
           </div>
-          <Button 
-            onClick={() => navigate('/customer-products')} 
+          <Button
+            onClick={continueShopping}
             variant="outline"
             className="border-green-500 text-green-500 hover:bg-green-50"
           >
@@ -115,13 +127,15 @@ const CustomerCart = () => {
                         ${item.price.toFixed(2)} per {item.unit}
                       </p>
                     </div>
-                    
+
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                       <div className="flex items-center gap-2">
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                          onClick={() =>
+                            updateQuantity(item.id, item.quantity - 1)
+                          }
                           className="h-8 w-8 p-0"
                         >
                           -
@@ -129,21 +143,28 @@ const CustomerCart = () => {
                         <Input
                           type="number"
                           value={item.quantity}
-                          onChange={(e) => updateQuantity(item.id, parseInt(e.target.value) || 0)}
+                          onChange={(e) =>
+                            updateQuantity(
+                              item.id,
+                              parseInt(e.target.value) || 0
+                            )
+                          }
                           className="w-16 text-center h-8"
                           min="0"
                         />
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                          onClick={() =>
+                            updateQuantity(item.id, item.quantity + 1)
+                          }
                           className="h-8 w-8 p-0"
                         >
                           +
                         </Button>
                       </div>
-                      
-                      <div className="text-right">
+
+                      <div className="flex flex-col items-end gap-2">
                         <p className="font-semibold text-lg">
                           ${(item.price * item.quantity).toFixed(2)}
                         </p>
@@ -184,8 +205,8 @@ const CustomerCart = () => {
                     <span>${(getCartTotal() + 3.99).toFixed(2)}</span>
                   </div>
                 </div>
-                
-                <Button 
+
+                <Button
                   onClick={proceedToCheckout}
                   className="w-full bg-green-500 hover:bg-green-600 mt-6"
                 >
