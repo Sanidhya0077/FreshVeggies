@@ -10,6 +10,7 @@ import CustomerProducts from "./pages/CustomerProducts";
 import CustomerCart from "./pages/CustomerCart";
 import CustomerPayment from "./pages/CustomerPayment";
 import CustomerTracking from "./pages/CustomerTracking";
+import VendorDashboard from "./pages/VendorDashboard";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/vendor-dashboard" element={<VendorDashboard />} />
           <Route path="/customer-products" element={<CustomerProducts />} />
           <Route path="/customer-cart" element={<CustomerCart />} />
           <Route path="/customer-payment" element={<CustomerPayment />} />
