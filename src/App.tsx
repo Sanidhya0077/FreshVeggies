@@ -7,7 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
-import AuthPage from "./pages/AuthPage";
+import OTPAuthPage from "./pages/OTPAuthPage";
 import CustomerProducts from "./pages/CustomerProducts";
 import CustomerCart from "./pages/CustomerCart";
 import CustomerPayment from "./pages/CustomerPayment";
@@ -25,7 +25,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/auth" element={<AuthPage />} />
+            <Route path="/auth" element={<OTPAuthPage />} />
             <Route path="/vendor-dashboard" element={<VendorDashboard />} />
             <Route path="/customer-products" element={<CustomerProducts />} />
             <Route path="/customer-cart" element={<CustomerCart />} />

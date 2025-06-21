@@ -22,7 +22,7 @@ const LandingPage = () => {
             <div className="absolute top-0 right-0 flex items-center gap-2">
               <div className="flex items-center gap-2 text-sm text-gray-600">
                 <User className="h-4 w-4" />
-                {user.email}
+                {user.phone || user.email}
               </div>
               <Button variant="outline" size="sm" onClick={handleSignOut}>
                 <LogOut className="h-4 w-4 mr-1" />
@@ -43,7 +43,7 @@ const LandingPage = () => {
               variant="outline"
               className="mt-4"
             >
-              Sign In / Sign Up
+              Sign In with Mobile
             </Button>
           )}
         </div>
@@ -138,7 +138,7 @@ const LandingPage = () => {
         {/* Footer */}
         <div className="text-center mt-12 text-gray-500">
           <p className="text-sm">
-            {user ? 'Welcome back! Choose your role to continue.' : 'Sign in or create an account to get started with VeggieMart'}
+            {user ? 'Welcome back! Choose your role to continue.' : 'Sign in with your mobile number to get started with VeggieMart'}
           </p>
         </div>
       </div>
