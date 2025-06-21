@@ -1,22 +1,51 @@
 
-import { Package, ShoppingCart, ArrowRight } from "lucide-react";
+import { Package, ShoppingCart, ArrowRight, User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 const LandingPage = () => {
   const navigate = useNavigate();
+  const { user, signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    await signOut();
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center p-4">
       <div className="max-w-4xl w-full">
         {/* Header */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-12 relative">
+          {user && (
+            <div className="absolute top-0 right-0 flex items-center gap-2">
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                <User className="h-4 w-4" />
+                {user.email}
+              </div>
+              <Button variant="outline" size="sm" onClick={handleSignOut}>
+                <LogOut className="h-4 w-4 mr-1" />
+                Sign Out
+              </Button>
+            </div>
+          )}
+          
           <div className="flex items-center justify-center gap-3 mb-4">
             <Package className="h-12 w-12 text-green-500" />
             <h1 className="text-4xl font-bold text-gray-800">VeggieMart</h1>
           </div>
           <p className="text-xl text-gray-600">Fresh vegetables delivered to your doorstep</p>
+          
+          {!user && (
+            <Button 
+              onClick={() => navigate('/auth')}
+              variant="outline"
+              className="mt-4"
+            >
+              Sign In / Sign Up
+            </Button>
+          )}
         </div>
 
         {/* Role Selection Cards */}
@@ -54,7 +83,7 @@ const LandingPage = () => {
                 </li>
               </ul>
               <Button 
-                onClick={() => navigate('/customer-products')}
+                onClick={() => user ? navigate('/customer-products') : navigate('/auth')}
                 className="w-full bg-blue-500 hover:bg-blue-600 text-white"
                 size="lg"
               >
@@ -96,7 +125,7 @@ const LandingPage = () => {
                 </li>
               </ul>
               <Button 
-                onClick={() => navigate('/vendor-dashboard')}
+                onClick={() => user ? navigate('/vendor-dashboard') : navigate('/auth')}
                 className="w-full bg-green-500 hover:bg-green-600 text-white"
                 size="lg"
               >
@@ -108,7 +137,9 @@ const LandingPage = () => {
 
         {/* Footer */}
         <div className="text-center mt-12 text-gray-500">
-          <p className="text-sm">Choose your role to get started with VeggieMart</p>
+          <p className="text-sm">
+            {user ? 'Welcome back! Choose your role to continue.' : 'Sign in or create an account to get started with VeggieMart'}
+          </p>
         </div>
       </div>
     </div>
